@@ -1,0 +1,19 @@
+{
+  "name": "Mission Control Dashboard",
+  "version": "1.0.0",
+  "description": "Psychedelic dark dashboard for OpenClaw",
+  "type": "static",
+  "category": "website",
+  "icon": "🍄",
+  "port": 8080,
+  "env": {
+    "DASHBOARD_THEME": {
+      "default": "dark",
+      "description": "Dashboard theme (dark/light)"
+    },
+    "API_ENDPOINT": {
+      "default": "",
+      "description": "Optional: API endpoint for live data"
+    }
+  }
+}
