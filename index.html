@@ -3,600 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍄 Mission Control</title>
+    <title>🍄 Mission Control - Interactive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a2e;
-            --bg-hover: #252545;
-            
+            --cyan: #00f0ff;
+            --magenta: #ff2a6d;
+            --yellow: #fcee0a;
+            --green: #05ffa1;
+            --orange: #ff6b35;
+            --void: #0a0a0f;
+            --void-light: #12121a;
+            --void-lighter: #1a1a2e;
             --neon-purple: #b829dd;
-            --neon-pink: #ff2a6d;
-            --neon-cyan: #05d9e8;
-            --neon-orange: #ff6b35;
-            --neon-green: #39ff14;
-            
-            --text-primary: #e6e6ff;
-            --text-secondary: #a0a0c0;
-            --text-muted: #6b6b8d;
-            
-            --shroom-glow: 0 0 20px rgba(184, 41, 221, 0.3);
-            --card-glow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--void);
+            color: #e6e6ff;
             min-height: 100vh;
-            overflow-x: hidden;
         }
-
-        /* Animated background mycelium pattern */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(ellipse at 20% 80%, rgba(184, 41, 221, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(5, 217, 232, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 40% 40%, rgba(255, 42, 109, 0.05) 0%, transparent 50%);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
             pointer-events: none;
             z-index: -1;
         }
-
-        /* Top Navigation Bar */
-        .top-bar {
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.3;
+        }
+        .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 1rem 2rem;
-            background: rgba(18, 18, 26, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(184, 41, 221, 0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: linear-gradient(135deg, rgba(184, 41, 221, 0.1), rgba(5, 217, 232, 0.1));
+            border-bottom: 2px solid var(--cyan);
+            position: relative;
         }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--cyan));
+            animation: scan 4s linear infinite;
         }
-
-        .shroom-logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .logo { display: flex; align-items: center; gap: 1rem; }
+        .shroom-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--magenta));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
             box-shadow: 0 0 20px rgba(184, 41, 221, 0.5);
-            animation: pulse 3s ease-in-out infinite;
+            animation: pulse 2s ease-in-out infinite;
         }
-
         @keyframes pulse {
             0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(184, 41, 221, 0.5); }
             50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(184, 41, 221, 0.8); }
         }
-
-        .nav-tabs {
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem; font-weight: 700;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        .system-status {
             display: flex;
-            gap: 0.5rem;
+            gap: 2rem;
+            font-size: 0.85rem;
         }
-
-        .nav-tab {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
+        .status-item { display: flex; align-items: center; gap: 0.5rem; }
+        .status-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
         }
-
-        .nav-tab:hover, .nav-tab.active {
-            background: rgba(184, 41, 221, 0.2);
-            color: var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(5, 217, 232, 0.3);
+        .status-dot.online { background: var(--green); box-shadow: 0 0 10px var(--green); }
+        .status-dot.active { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+        .status-dot.warning { background: var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
-
-        .top-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .icon-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .icon-btn:hover {
-            background: var(--bg-hover);
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(5, 217, 232, 0.3);
-        }
-
-        .badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--neon-pink);
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        /* Main Layout */
-        .main-container {
+        .main-grid {
             display: grid;
-            grid-template-columns: 260px 1fr;
-            min-height: calc(100vh - 70px);
-        }
-
-        /* Sidebar */
-        .sidebar {
-            background: var(--bg-secondary);
-            border-right: 1px solid rgba(184, 41, 221, 0.1);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: 250px 1fr 300px;
             gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
         }
-
-        .sidebar-section h3 {
-            font-size: 0.75rem;
+        .sidebar {
+            background: var(--void-light);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .sidebar-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyan);
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--text-muted);
             margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
         }
-
-        .sidebar-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .sidebar-item {
+        .nav-item {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             padding: 0.75rem 1rem;
-            border-radius: 10px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .sidebar-item:hover, .sidebar-item.active {
-            background: linear-gradient(90deg, rgba(184, 41, 221, 0.2), transparent);
-            color: var(--text-primary);
-            border-left: 3px solid var(--neon-purple);
-        }
-
-        .sidebar-item .icon {
-            width: 24px;
-            text-align: center;
-        }
-
-        .cta-button {
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: auto;
+            border-left: 3px solid transparent;
         }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(184, 41, 221, 0.4);
+        .nav-item:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--cyan);
+            transform: translateX(5px);
         }
-
-        /* Dashboard Content */
-        .dashboard {
-            padding: 2rem;
+        .nav-item.active {
+            background: rgba(184, 41, 221, 0.2);
+            border-left-color: var(--neon-purple);
+        }
+        .main-content {
             display: flex;
             flex-direction: column;
-            gap: 2rem;
-        }
-
-        /* Six Pillars Grid */
-        .pillars-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
         }
-
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
         .pillar-card {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--void-light);
+            border: 1px solid rgba(255, 42, 109, 0.3);
+            border-radius: 8px;
+            padding: 1.25rem;
+            cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
-
         .pillar-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 42, 109, 0.1), transparent);
+            transition: left 0.5s;
         }
-
+        .pillar-card:hover::before { left: 100%; }
         .pillar-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shroom-glow);
-            border-color: rgba(184, 41, 221, 0.3);
+            border-color: var(--magenta);
+            box-shadow: 0 0 20px rgba(255, 42, 109, 0.3);
+            transform: translateY(-2px);
         }
-
-        .pillar-card:hover::before {
-            opacity: 1;
-        }
-
-        .pillar-card.active::before {
-            opacity: 1;
-            background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
-        }
-
+        .pillar-card.nutrition { border-color: rgba(5, 255, 161, 0.3); }
+        .pillar-card.nutrition:hover { border-color: var(--green); box-shadow: 0 0 20px rgba(5, 255, 161, 0.3); }
+        .pillar-card.finance { border-color: rgba(252, 238, 10, 0.3); }
+        .pillar-card.finance:hover { border-color: var(--yellow); box-shadow: 0 0 20px rgba(252, 238, 10, 0.3); }
         .pillar-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .pillar-title {
-            display: flex;
             align-items: center;
-            gap: 0.75rem;
+            margin-bottom: 0.75rem;
         }
-
-        .pillar-icon {
-            font-size: 1.5rem;
-        }
-
-        .pillar-name {
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
         .pillar-status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(5, 255, 161, 0.2);
+            color: var(--green);
         }
-
-        .status-active {
-            background: rgba(57, 255, 20, 0.2);
-            color: var(--neon-green);
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
-        }
-
-        .status-pending {
-            background: rgba(255, 107, 53, 0.2);
-            color: var(--neon-orange);
-        }
-
         .pillar-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.75rem;
         }
-
         .stat {
             text-align: center;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
         }
-
         .stat-value {
-            font-size: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--cyan);
         }
-
         .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
+            font-size: 0.7rem;
+            color: rgba(230, 230, 255, 0.6);
             text-transform: uppercase;
         }
-
-        /* Data Section */
-        .data-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .data-card {
-            background: var(--bg-card);
-            border-radius: 16px;
+        .actions-section {
+            background: var(--void-light);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
             padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-        .data-card h3 {
-            font-size: 0.875rem;
-            color: var(--text-muted);
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        .cyber-btn {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 1rem;
-        }
-
-        .progress-item {
-            margin-bottom: 1rem;
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-fill.purple { background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink)); }
-        .progress-fill.cyan { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); }
-        .progress-fill.orange { background: linear-gradient(90deg, var(--neon-orange), var(--neon-pink)); }
-
-        /* Chart Placeholders */
-        .chart-container {
-            height: 200px;
-            background: linear-gradient(180deg, rgba(184, 41, 221, 0.1), transparent);
-            border-radius: 10px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding: 1rem;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--cyan);
+            background: transparent;
+            color: var(--cyan);
+            cursor: pointer;
             position: relative;
-        }
-
-        .chart-bar {
-            width: 30px;
-            background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple));
-            border-radius: 4px 4px 0 0;
+            overflow: hidden;
             transition: all 0.3s ease;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
-
-        .chart-bar:hover {
-            box-shadow: 0 0 20px rgba(5, 217, 232, 0.5);
+        .cyber-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+            transition: left 0.5s;
         }
-
-        .gauge-container {
+        .cyber-btn:hover::before { left: 100%; }
+        .cyber-btn:hover {
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        .cyber-btn.magenta {
+            border-color: var(--magenta);
+            color: var(--magenta);
+        }
+        .cyber-btn.magenta:hover {
+            background: rgba(255, 42, 109, 0.1);
+            box-shadow: 0 0 20px rgba(255, 42, 109, 0.4);
+        }
+        .cyber-btn.green {
+            border-color: var(--green);
+            color: var(--green);
+        }
+        .cyber-btn.green:hover {
+            background: rgba(5, 255, 161, 0.1);
+            box-shadow: 0 0 20px rgba(5, 255, 161, 0.4);
+        }
+        .terminal {
+            background: var(--void);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+        .terminal-header {
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            height: 200px;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
         }
-
-        .gauge {
-            width: 120px;
-            height: 120px;
+        .terminal-dot {
+            width: 12px; height: 12px;
             border-radius: 50%;
-            background: conic-gradient(var(--neon-purple) 0deg 210deg, rgba(255,255,255,0.1) 210deg);
+        }
+        .terminal-dot.red { background: var(--magenta); }
+        .terminal-dot.yellow { background: var(--yellow); }
+        .terminal-dot.green { background: var(--green); }
+        .terminal-content { color: var(--cyan); line-height: 1.6; }
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .panel-card {
+            background: var(--void-light);
+            border: 1px solid rgba(255, 42, 109, 0.3);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--magenta);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 42, 109, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .task-item:hover { color: var(--cyan); padding-left: 5px; }
+        .task-checkbox {
+            width: 16px; height: 16px;
+            border: 2px solid var(--cyan);
+            border-radius: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            cursor: pointer;
         }
-
-        .gauge::before {
-            content: '';
-            width: 80px;
-            height: 80px;
-            background: var(--bg-card);
-            border-radius: 50%;
+        .task-checkbox.checked {
+            background: var(--green);
+            border-color: var(--green);
         }
-
-        .gauge-value {
-            position: absolute;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--neon-cyan);
+        .task-checkbox.checked::after {
+            content: '✓';
+            color: var(--void);
+            font-size: 10px;
+            font-weight: bold;
         }
-
-        /* Responsive */
         @media (max-width: 1200px) {
-            .pillars-grid { grid-template-columns: repeat(2, 1fr); }
-            .data-section { grid-template-columns: 1fr 1fr; }
-        }
-
-        @media (max-width: 768px) {
-            .main-container { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
-            .pillars-grid { grid-template-columns: 1fr; }
-            .data-section { grid-template-columns: 1fr; }
-            .top-bar { padding: 1rem; }
-            .nav-tabs { display: none; }
+            .main-grid { grid-template-columns: 1fr; }
+            .sidebar, .right-panel { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Top Bar -->
-    <nav class="top-bar">
-        <div class="logo-section">
-            <div class="shroom-logo">🍄</div>
-            <div class="nav-tabs">
-                <a href="#" class="nav-tab active">Dashboard</a>
-                <a href="#" class="nav-tab">Finance</a>
-                <a href="#" class="nav-tab">Tasks</a>
-                <a href="#" class="nav-tab">Notes</a>
+    <header class="header">
+        <div class="logo">
+            <div class="shroom-icon">🍄</div>
+            <div class="title">Mission Control</div>
+        </div>
+        <div class="system-status">
+            <div class="status-item">
+                <span class="status-dot online"></span>
+                <span>SYSTEM ONLINE</span>
+            </div>
+            <div class="status-item">
+                <span class="status-dot active"></span>
+                <span>ORCHESTRATOR ACTIVE</span>
             </div>
         </div>
-        <div class="top-actions">
-            <button class="icon-btn">🔍</button>
-            <button class="icon-btn">
-                🔔
-                <span class="badge">3</span>
-            </button>
-            <button class="icon-btn">👤</button>
-            <button class="icon-btn">☰</button>
-        </div>
-    </nav>
+    </header>
 
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Sidebar -->
+    <div class="main-grid">
         <aside class="sidebar">
-            <div class="sidebar-section">
-                <h3>Mission Control</h3>
-                <div class="sidebar-menu">
-                    <a href="#" class="sidebar-item active">
-                        <span class="icon">📊</span>
-                        Overview
-                    </a>
-                    <a href="#" class="sidebar-item">
-                        <span class="icon">💰</span>
-                        Finance
-                    </a>
-                    <a href="#" class="sidebar-item">
-                        <span class="icon">🥗</span>
-                        Nutrition
-                    </a>
-                    <a href="#" class="sidebar-item">
-                        <span class="icon">📝</span>
-                        Daily Briefing
-                    </a>
-                    <a href="#" class="sidebar-item">
-                        <span class="icon">⚡</span>
-                        Autonomy
-                    </a>
-                    <a href="#" class="sidebar-item">
-                        <span class="icon">🔧</span>
-                        Tools
-                    </a>
+            <div class="sidebar-title">Navigation</div>
+            <nav>
+                <div class="nav-item active" onclick="alert('Dashboard')">
+                    <span>📊</span>
+                    <span>Dashboard</span>
                 </div>
-            </div>
-            
-            <div class="sidebar-section">
-                <h3>Quick Stats</h3>
-                <div class="sidebar-menu">
-                    <div class="sidebar-item">
-                        <span class="icon">📈</span>
-                        <div>
-                            <div>Portfolio</div>
-                            <small style="color: var(--neon-green)">+12.5%</small>
-                        </div>
-                    </div>
-                    <div class="sidebar-item">
-                        <span class="icon">✓</span>
-                        <div>
-                            <div>Tasks Today</div>
-                            <small style="color: var(--neon-cyan)">7/12 done</small>
-                        </div>
-                    </div>
+                <div class="nav-item" onclick="alert('Nutrition zone')">
+                    <span>🥗</span>
+                    <span>Nutrition</span>
                 </div>
-            </div>
-
-            <button class="cta-button">+ New Task</button>
+                <div class="nav-item" onclick="alert('Finance zone')">
+                    <span>💰</span>
+                    <span>Finance</span>
+                </div>
+                <div class="nav-item" onclick="alert('Shroom corner')">
+                    <span>🍄</span>
+                    <span>Shroom's Corner</span>
+                </div>
+            </nav>
         </aside>
 
-        <!-- Dashboard -->
-        <main class="dashboard">
-            <!-- Six Pillars -->
+        <main class="main-content">
             <div class="pillars-grid">
-                <div class="pillar-card active">
+                <div class="pillar-card nutrition" onclick="alert('Open Nutrition')">
                     <div class="pillar-header">
-                        <div class="pillar-title">
-                            <span class="pillar-icon">📋</span>
-                            <span class="pillar-name">Daily Briefing</span>
-                        </div>
-                        <span class="pillar-status status-active">Active</span>
+                        <div><span>🥗</span> <strong>Nutrition</strong></div>
+                        <span class="pillar-status">ACTIVE</span>
                     </div>
                     <div class="pillar-stats">
                         <div class="stat">
-                            <div class="stat-value">8</div>
-                            <div class="stat-label">AM Delivery</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">12</div>
-                            <div class="stat-label">Days Streak</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pillar-card">
-                    <div class="pillar-header">
-                        <div class="pillar-title">
-                            <span class="pillar-icon">🥗</span>
-                            <span class="pillar-name">Nutrition</span>
-                        </div>
-                        <span class="pillar-status status-active">Active</span>
-                    </div>
-                    <div class="pillar-stats">
-                        <div class="stat">
-                            <div class="stat-value">24</div>
-                            <div class="stat-label">Meals Logged</div>
+                            <div class="stat-value">—</div>
+                            <div class="stat-label">Meals</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">Sat</div>
-                            <div class="stat-label">Audit Day</div>
+                            <div class="stat-label">Audit</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="pillar-card">
+                <div class="pillar-card finance" onclick="alert('Open Finance')">
                     <div class="pillar-header">
-                        <div class="pillar-title">
-                            <span class="pillar-icon">💰</span>
-                            <span class="pillar-name">Finance</span>
-                        </div>
-                        <span class="pillar-status status-active">Active</span>
+                        <div><span>💰</span> <strong>Finance</strong></div>
+                        <span class="pillar-status" style="background: rgba(252, 238, 10, 0.2); color: var(--yellow);">BUSY</span>
                     </div>
                     <div class="pillar-stats">
                         <div class="stat">
@@ -604,167 +439,49 @@
                             <div class="stat-label">Statements</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value">33%</div>
-                            <div class="stat-label">FIRE Progress</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pillar-card">
-                    <div class="pillar-header">
-                        <div class="pillar-title">
-                            <span class="pillar-icon">🍄</span>
-                            <span class="pillar-name">Shroom Thoughts</span>
-                        </div>
-                        <span class="pillar-status status-active">Active</span>
-                    </div>
-                    <div class="pillar-stats">
-                        <div class="stat">
-                            <div class="stat-value">3</div>
-                            <div class="stat-label">Cron Jobs</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Auto</div>
-                            <div class="stat-label">Mode</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pillar-card">
-                    <div class="pillar-header">
-                        <div class="pillar-title">
-                            <span class="pillar-icon">⚡</span>
-                            <span class="pillar-name">Self-Sustain</span>
-                        </div>
-                        <span class="pillar-status status-pending">Pending</span>
-                    </div>
-                    <div class="pillar-stats">
-                        <div class="stat">
-                            <div class="stat-value">$0</div>
-                            <div class="stat-label">Cost Goal</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value"> researching</div>
-                            <div class="stat-label">Status</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pillar-card">
-                    <div class="pillar-header">
-                        <div class="pillar-title">
-                            <span class="pillar-icon">📝</span>
-                            <span class="pillar-name">English</span>
-                        </div>
-                        <span class="pillar-status status-active">Active</span>
-                    </div>
-                    <div class="pillar-stats">
-                        <div class="stat">
-                            <div class="stat-value">Opt 3</div>
-                            <div class="stat-label">Mirroring</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">Sun</div>
-                            <div class="stat-label">Report</div>
+                            <div class="stat-value">~33%</div>
+                            <div class="stat-label">FIRE</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Data Section -->
-            <div class="data-section">
-                <div class="data-card">
-                    <h3>Task Progress</h3>
-                    <div class="progress-item">
-                        <div class="progress-header">
-                            <span>Finance Audit</span>
-                            <span style="color: var(--neon-cyan)">75%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill cyan" style="width: 75%"></div>
-                        </div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-header">
-                            <span>Parser Development</span>
-                            <span style="color: var(--neon-purple)">30%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill purple" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-header">
-                            <span>Obsidian Sync</span>
-                            <span style="color: var(--neon-orange)">60%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill orange" style="width: 60%"></div>
-                        </div>
-                    </div>
+            <div class="actions-section">
+                <div class="section-title">Quick Actions</div>
+                <div class="action-buttons">
+                    <button class="cyber-btn" onclick="alert('Run Daily Council')">⚡ Run Council</button>
+                    <button class="cyber-btn magenta" onclick="alert('Process Statements')">📄 Process</button>
+                    <button class="cyber-btn green" onclick="alert('Sync Obsidian')">🔄 Sync</button>
+                    <button class="cyber-btn" onclick="alert('Update Dashboard')">📊 Update</button>
                 </div>
-
-                <div class="data-card">
-                    <h3>Monthly Activity</h3>
-                    <div class="chart-container">
-                        <div class="chart-bar" style="height: 40%"></div>
-                        <div class="chart-bar" style="height: 65%"></div>
-                        <div class="chart-bar" style="height: 45%"></div>
-                        <div class="chart-bar" style="height: 80%"></div>
-                        <div class="chart-bar" style="height: 55%"></div>
-                        <div class="chart-bar" style="height: 90%"></div>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
                     </div>
-                    <div style="text-align: center; margin-top: 0.5rem; color: var(--neon-cyan); font-size: 1.5rem; font-weight: 700;">
-                        6,679
-                    </div>
-                    <div style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">
-                        Actions this month
-                    </div>
-                </div>
-
-                <div class="data-card">
-                    <h3>System Health</h3>
-                    <div class="gauge-container">
-                        <div class="gauge" style="background: conic-gradient(var(--neon-green) 0deg 212deg, rgba(255,255,255,0.1) 212deg);">
-                            <div class="gauge-value">59%</div>
-                        </div>
-                        <div class="gauge" style="background: conic-gradient(var(--neon-purple) 0deg 277deg, rgba(255,255,255,0.1) 277deg);">
-                            <div class="gauge-value">77%</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-around; margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);">
-                        <span>Memory</span>
-                        <span>Tasks</span>
+                    <div class="terminal-content">
+                        <div>> Orchestrator initialized...</div>
+                        <div>> 4 zones active</div>
+                        <div>> Ready for commands_</div>
                     </div>
                 </div>
             </div>
         </main>
+
+        <aside class="right-panel">
+            <div class="panel-card">
+                <div class="panel-title">Pending Tasks</div>
+                <div class="task-item" onclick="this.querySelector('.task-checkbox').classList.toggle('checked')">
+                    <span class="task-checkbox"></span>
+                    <span>Process 48 statements</span>
+                </div>
+                <div class="task-item" onclick="this.querySelector('.task-checkbox').classList.toggle('checked')">
+                    <span class="task-checkbox checked"></span>
+                    <span>Setup browser</span>
+                </div>
+            </div>
+        </aside>
     </div>
-
-    <script>
-        // Animate progress bars on load
-        document.addEventListener('DOMContentLoaded', () => {
-            const progressBars = document.querySelectorAll('.progress-fill');
-            progressBars.forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0';
-                setTimeout(() => {
-                    bar.style.width = width;
-                }, 300);
-            });
-        });
-
-        // Simulate real-time updates
-        setInterval(() => {
-            const badges = document.querySelectorAll('.badge');
-            badges.forEach(badge => {
-                const current = parseInt(badge.textContent);
-                if (Math.random() > 0.9) {
-                    badge.textContent = current + 1;
-                    badge.style.animation = 'pulse 0.5s ease';
-                }
-            });
-        }, 5000);
-    </script>
 </body>
 </html>
