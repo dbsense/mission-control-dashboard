@@ -1,0 +1,49 @@
+{
+  "lastUpdated": "2026-02-21T16:28:36.164807",
+  "nutrition": {
+    "mealsLogged": 1,
+    "auditDay": "Saturday",
+    "lastMeal": "Rokeby Protein Smoothie (30g protein)"
+  },
+  "finance": {
+    "statementsPending": 13,
+    "statementsProcessed": 35,
+    "transactions": 984,
+    "totalValue": 3490000,
+    "fireProgress": 33,
+    "fireProgressNote": "est"
+  },
+  "shroomThoughts": {
+    "cronJobs": 9,
+    "mode": "Auto",
+    "nextCouncil": "Tonight 7 PM HKT"
+  },
+  "systemStatus": {
+    "minimax": "online",
+    "kimi": "online",
+    "browser": "online",
+    "orchestrator": "active"
+  },
+  "tasks": [
+    {
+      "text": "Process 48 statements",
+      "completed": false,
+      "priority": "high"
+    },
+    {
+      "text": "iCal URL for calendar",
+      "completed": false,
+      "priority": "medium"
+    },
+    {
+      "text": "Setup browser automation",
+      "completed": true,
+      "priority": "high"
+    },
+    {
+      "text": "Weekly council prep",
+      "completed": false,
+      "priority": "medium"
+    }
+  ]
+}

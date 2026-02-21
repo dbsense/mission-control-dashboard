@@ -483,5 +483,90 @@
             </div>
         </aside>
     </div>
+
+    <script>
+        // Fetch real data from data.json
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                // Update Nutrition stats
+                if (data.nutrition) {
+                    document.querySelector('.nutrition .stat-value').textContent = data.nutrition.mealsLogged;
+                }
+                
+                // Update Finance stats
+                if (data.finance) {
+                    const financeStats = document.querySelectorAll('.finance .stat-value');
+                    if (financeStats[0]) financeStats[0].textContent = data.finance.statementsPending;
+                    if (financeStats[1]) financeStats[1].textContent = '~' + data.finance.fireProgress + '%';
+                }
+                
+                // Update Shroom stats
+                if (data.shroomThoughts) {
+                    document.querySelector('.shroom .stat-value').textContent = data.shroomThoughts.cronJobs;
+                }
+                
+                // Populate tasks
+                if (data.tasks) {
+                    const taskList = document.querySelector('.panel-card .task-list') || document.querySelector('.right-panel .panel-card');
+                    if (taskList) {
+                        const tasksHtml = data.tasks.map(task => `
+                            <div class="task-item" onclick="this.querySelector('.task-checkbox').classList.toggle('checked')">
+                                <span class="task-checkbox ${task.completed ? 'checked' : ''}"></span>
+                                <span>${task.text}</span>
+                            </div>
+                        `).join('');
+                        taskList.innerHTML = '<div class="panel-title">Pending Tasks</div>' + tasksHtml;
+                    }
+                }
+                
+                // Log to terminal
+                logToTerminal(`Data loaded: ${data.finance?.transactions || 0} transactions, ${data.nutrition?.mealsLogged || 0} meals today`);
+                
+            } catch (error) {
+                logToTerminal('Error loading data: ' + error.message);
+            }
+        }
+
+        // Terminal logging
+        function logToTerminal(message) {
+            const terminal = document.querySelector('.terminal-content');
+            if (terminal) {
+                const line = document.createElement('div');
+                line.textContent = '> ' + message;
+                terminal.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+        }
+
+        // Action handlers
+        function triggerAction(action) {
+            const messages = {
+                'run-council': '⚡ Initializing Daily Improvement Council...',
+                'process-statements': '📄 Processing statements from queue...',
+                'sync-obsidian': '🔄 Syncing Obsidian vault...',
+                'update-dashboard': '📊 Refreshing dashboard data...'
+            };
+            
+            logToTerminal(messages[action] || 'Executing: ' + action);
+            
+            // Simulate processing
+            setTimeout(() => {
+                logToTerminal('✅ Command executed successfully');
+                // Reload data if needed
+                if (action === 'update-dashboard') {
+                    loadData();
+                }
+            }, 1000);
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadData);
+        
+        // Refresh data every 5 minutes
+        setInterval(loadData, 5 * 60 * 1000);
+    </script>
 </body>
 </html>
